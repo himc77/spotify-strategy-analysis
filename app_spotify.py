@@ -9,7 +9,7 @@ st.set_page_config(page_title="Spotify Insights 2025", layout="wide")
 # 2. Carga de datos con "Cache" para que sea veloz
 @st.cache_data
 def load_data():
-    df = pd.read_parquet("spotify_master_final.parquet", engine='fastparquet')
+    df = pd.read_parquet("spotify_light.parquet")
     return df
 
 df = load_data()
