@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 1. Configuración de la página (Modo Ancho y Título en la pestaña)
+# 1. Configuración de la página 
 st.set_page_config(page_title="Spotify Insights 2025", layout="wide")
 
 # 2. Carga de datos con "Cache" para que sea veloz
@@ -30,19 +30,19 @@ st.sidebar.markdown("---")
 st.sidebar.write("🎓 **Proyecto:** Humanidades Digitales")
 st.sidebar.write("📅 **Fecha:** Mayo 2026")
 
-# --- ENCABEZADO ESTRATÉGICO ---
+# --- ENCABEZADO ---
 st.set_page_config(page_title="Spotify Strategic Analytics", layout="wide")
 
 st.title(" Spotify Market Intelligence Dashboard")
 st.markdown(f"**Strategic Insight Engine**")
 
-# Usamos columnas para que el "Snapshot" no ocupe tanto espacio hacia abajo
+
 col_header1, col_header2 = st.columns([2, 1])
 
 with col_header1:
     st.write("""
     ### Transformando Datos en Decisiones Musicales
-    Este ecosistema analítico procesa millones de registros para identificar los **patrones de éxito** que definen la industria actual. 
+    Este ecosistema analítico procesa millones de registros, que al final quedaron en miles para poder hacerlo público y rápido. Lo que sigue fue lograr identificar los **patrones de éxito** que definen la industria actual. 
     A través de minería de datos avanzada, exploramos la intersección entre la creatividad artística y la viabilidad comercial.
     """)
 
@@ -56,7 +56,7 @@ with col_header2:
 
 st.divider()
 
-# 3. MÉTRICAS CLAVE (Los "Big Numbers")
+# 3. MÉTRICAS CLAVE 
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Volumen de Datos", f"{len(df):,} pistas")
@@ -70,29 +70,38 @@ with col3:
 st.divider()
 
 # 4. SECCIÓN DE GRÁFICAS CON EXPLICACIÓN
-st.header("Análisis de Tendencias Globales")
 
 # --- GRÁFICA 1: GÉNEROS ---
 c1, c2 = st.columns([2, 1]) # La gráfica ocupa más espacio que el texto
 
 with c1:
     top_generos = df.groupby('artist_genres')['track_popularity'].mean().sort_values(ascending=False).head(10)
-    fig1, ax1 = plt.subplots(figsize=(10, 5))
-    sns.barplot(x=top_generos.values, y=top_generos.index, palette="Blues_r", ax=ax1)
-    ax1.set_title("Top 10 Géneros por Popularidad")
-    st.pyplot(fig1)
 
-with c2:
-    st.subheader("Dominio del Mercado")
-    st.write("""
-    **Análisis Estratégico:**  
-    El gráfico revela un liderazgo claro de los géneros urbanos y regionales. 
-    Es notable cómo el **West Coast Hip Hop** mantiene la hegemonía comercial, 
-    seguido de cerca por movimientos culturales como el **Afropop** y el **Urbano Latino**.
-    
-    La inversión en mercados emergentes está rindiendo 
-    frutos, con popularidades promedio que superan los 70 puntos.
-    """)
+# --- GRÁFICA 1: TOP GÉNEROS  ---
+st.header("Análisis de Géneros Dominantes")
+
+# 1. Calculamos los datos
+top_generos_data = df.groupby('artist_genres')['track_popularity'].mean().sort_values(ascending=False).head(10)
+top_generos_data.index = [g[:30] + '...' if len(str(g)) > 30 else g for g in top_generos_data.index]
+
+# 2. La gráfica solita 
+fig1, ax1 = plt.subplots(figsize=(12, 6))
+sns.barplot(x=top_generos_data.values, y=top_generos_data.index, color="#1DB954", ax=ax1)
+
+ax1.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+ax1.set_title("Top 10 Géneros por Impacto Acumulado", fontsize=16, fontweight='bold')
+plt.subplots_adjust(left=0.3) 
+
+st.pyplot(fig1)
+
+# 3. EL TEXTO 
+st.markdown("### Dominio del Mercado")
+st.write("""
+El gráfico revela un liderazgo claro de los géneros urbanos y regionales. Es notable cómo el **West Coast Hip Hop** mantiene la hegemonía comercial, seguido de cerca por movimientos culturales como el **Afropop** y el **Urbano Latino**.
+
+La inversión en mercados emergentes está rindiendo frutos, con popularidades promedio que superan los **70 puntos**.
+""")
 
 st.divider()
 
@@ -127,7 +136,7 @@ st.header(" Correlación de Atributos Musicales")
 col_graf1, col_txt1 = st.columns([2, 1])
 
 with col_graf1:
-    # Seleccionamos variables numéricas para el Heatmap
+    # variables numéricas para el Heatmap
     cols_analisis = ['track_popularity', 'danceability', 'energy', 'valence', 'tempo']
     corr = df[cols_analisis].corr()
     
@@ -145,7 +154,7 @@ with col_txt1:
 
 st.divider()
 
-# --- NUEVA SECCIÓN: DISTRIBUCIÓN DE ÉXITO ---
+# --- DISTRIBUCIÓN DE ÉXITO ---
 st.header(" La Curva del Éxito")
 fig5, ax5 = plt.subplots(figsize=(10, 4))
 sns.histplot(df['track_popularity'], kde=True, color="green", ax=ax5)
@@ -176,13 +185,12 @@ with c8:
 
 st.header(" Segmentación: ¿Energía o Ritmo?")
 
-# 1. Aumentamos el tamaño de la figura
 fig7, ax7 = plt.subplots(figsize=(12, 7))
 
-# 2. Usamos una muestra un poco más pequeña para mayor claridad
+
 df_sample = df.sample(min(1500, len(df))) 
 
-# 3. Graficamos con transparencia (alpha) para evitar el empalamiento
+
 sns.scatterplot(
     data=df_sample, 
     x='danceability', 
@@ -202,29 +210,38 @@ ax7.set_title("Relación entre Energía y Bailabilidad (Muestra Optimizada)")
 ax7.set_xlabel("Bailabilidad (Danceability)")
 ax7.set_ylabel("Energía (Energy)")
 
-# Movemos la leyenda afuera para que no tape puntos
+
 ax7.legend(title="Explícita / Popularidad", bbox_to_anchor=(1.05, 1), loc='upper left')
 
 st.pyplot(fig7)
 st.caption("Nota: Se aplicó un filtro de densidad y transparencia para mejorar la legibilidad del análisis.")
 
 # 5. BUSCADOR INTELIGENTE
-st.header(" Auditoría de Pistas Específicas")
-busqueda = st.text_input("Ingrese Artista o Canción para consultar métricas detalladas:")
+st.divider()
+st.subheader("Buscador de Canciones e Intérpretes")
+
+# 1. Entrada de texto del usuario
+busqueda = st.text_input("Escribe el nombre del artista o canción:", "")
 
 if busqueda:
+    # 2. Filtramos ignorando mayúsculas/minúsculas y buscando coincidencias parciales
+    # Esto buscará "Peso Pluma" aunque escribas solo "pluma" o "PESO"
     resultados = df[
-        df['track_name'].str.contains(busqueda, case=False, na=False) | 
-        df['artist_name'].str.contains(busqueda, case=False, na=False)
+        df['artist_name'].str.contains(busqueda, case=False, na=False) | 
+        df['track_name'].str.contains(busqueda, case=False, na=False)
     ]
-    st.success(f"Se encontraron {len(resultados)} coincidencias en la base de datos.")
-    st.dataframe(resultados, use_container_width=True)
+    
+    if not resultados.empty:
+        st.write(f"Se encontraron {len(resultados)} coincidencias:")
+        # Mostramos las columnas principales
+        st.dataframe(resultados[['artist_name', 'track_name', 'track_popularity', 'artist_genres']])
+    else:
+        st.warning(f"No se encontraron resultados para: '{busqueda}'")
 else:
-    st.info("Utilice el buscador para explorar la base completa.")
-st.divider()
+    st.info("Ingresa un término para comenzar la búsqueda.")
 
-# --- SECCIÓN FINAL: CONCLUSIONES DEL CONSULTOR ---
-st.header("🏁 Conclusiones y Recomendaciones Estratégicas")
+# --- CONCLUSIONES DEL CONSULTOR ---
+st.header("Conclusiones y Recomendaciones Estratégicas")
 
 c_final1, c_final2 = st.columns(2)
 
@@ -237,7 +254,7 @@ with c_final1:
     """)
 
 with c_final2:
-    st.success("### 🚀 Próximos Pasos Sugeridos")
+    st.success("### Próximos Pasos Sugeridos")
     st.markdown("""
     * **Optimización de Portafolio:** Priorizar artistas con un 'Valence' superior a 0.5 para campañas de verano.
     * **Expansión de Datos:** Integrar datos de redes sociales (TikTok/IG) para predecir picos de popularidad antes de que ocurran en Spotify.
