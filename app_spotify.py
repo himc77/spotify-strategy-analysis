@@ -33,8 +33,8 @@ st.sidebar.write("📅 **Fecha:** Mayo 2026")
 # --- ENCABEZADO ESTRATÉGICO ---
 st.set_page_config(page_title="Spotify Strategic Analytics", layout="wide")
 
-st.title("🎧 Spotify Market Intelligence Dashboard")
-st.markdown(f"**Strategic Insight Engine | v2.0**")
+st.title(" Spotify Market Intelligence Dashboard")
+st.markdown(f"**Strategic Insight Engine**")
 
 # Usamos columnas para que el "Snapshot" no ocupe tanto espacio hacia abajo
 col_header1, col_header2 = st.columns([2, 1])
@@ -49,9 +49,9 @@ with col_header1:
 with col_header2:
     st.success(f"""
     **Estatus del Sistema:**
-    * 📅 **Corte:** Mayo 2026
-    * 📊 **Volumen:** Millones de Datapoints
-    * ⚡ **Arquitectura:** Parquet Optimized
+    *  **Corte:** Mayo 2026
+    *  **Volumen:** Miles de Datapoints
+    * **Arquitectura:** Parquet Optimized
     """)
 
 st.divider()
@@ -70,7 +70,7 @@ with col3:
 st.divider()
 
 # 4. SECCIÓN DE GRÁFICAS CON EXPLICACIÓN
-st.header("📊 Análisis de Tendencias Globales")
+st.header("Análisis de Tendencias Globales")
 
 # --- GRÁFICA 1: GÉNEROS ---
 c1, c2 = st.columns([2, 1]) # La gráfica ocupa más espacio que el texto
@@ -122,13 +122,12 @@ with c4:
 st.divider()
 
 
-# --- NUEVA SECCIÓN: ANÁLISIS DE ATRIBUTOS (MAPA DE CALOR) ---
-st.header("🔥 Correlación de Atributos Musicales")
+# --- ANÁLISIS DE ATRIBUTOS (MAPA DE CALOR) ---
+st.header(" Correlación de Atributos Musicales")
 col_graf1, col_txt1 = st.columns([2, 1])
 
 with col_graf1:
     # Seleccionamos variables numéricas para el Heatmap
-    # Asegúrate de que estas columnas existan en tu Parquet
     cols_analisis = ['track_popularity', 'danceability', 'energy', 'valence', 'tempo']
     corr = df[cols_analisis].corr()
     
@@ -147,7 +146,7 @@ with col_txt1:
 st.divider()
 
 # --- NUEVA SECCIÓN: DISTRIBUCIÓN DE ÉXITO ---
-st.header("📈 La Curva del Éxito")
+st.header(" La Curva del Éxito")
 fig5, ax5 = plt.subplots(figsize=(10, 4))
 sns.histplot(df['track_popularity'], kde=True, color="green", ax=ax5)
 ax5.set_title("Distribución de Popularidad en la Base de Datos")
@@ -156,7 +155,7 @@ st.pyplot(fig5)
 st.info("**Nota Técnica:** La mayoría de las canciones se concentran en rangos bajos. Lograr una popularidad > 80 coloca a un artista en el top 1% de la industria.")
 
 st.divider()
-st.header("🏆 Dominancia de Mercado por Artista")
+st.header(" Dominancia de Mercado por Artista")
 c7, c8 = st.columns([1, 2])
 
 with c7:
@@ -175,7 +174,7 @@ with c8:
 
     st.divider()
 
-st.header("🎯 Segmentación: ¿Energía o Ritmo?")
+st.header(" Segmentación: ¿Energía o Ritmo?")
 
 # 1. Aumentamos el tamaño de la figura
 fig7, ax7 = plt.subplots(figsize=(12, 7))
@@ -210,7 +209,7 @@ st.pyplot(fig7)
 st.caption("Nota: Se aplicó un filtro de densidad y transparencia para mejorar la legibilidad del análisis.")
 
 # 5. BUSCADOR INTELIGENTE
-st.header("🔍 Auditoría de Pistas Específicas")
+st.header(" Auditoría de Pistas Específicas")
 busqueda = st.text_input("Ingrese Artista o Canción para consultar métricas detalladas:")
 
 if busqueda:
@@ -230,7 +229,7 @@ st.header("🏁 Conclusiones y Recomendaciones Estratégicas")
 c_final1, c_final2 = st.columns(2)
 
 with c_final1:
-    st.info("### 📌 Hallazgos Clave")
+    st.info("### Hallazgos Clave")
     st.markdown("""
     1. **Estandarización del Éxito:** La alta correlación entre *Energy* y *Danceability* confirma que la audiencia actual prioriza el ritmo sobre la lírica compleja.
     2. **Mitigación de Riesgos:** El análisis de contenido explícito demuestra que la rentabilidad no está sujeta a la censura, permitiendo estrategias de marca más flexibles.
