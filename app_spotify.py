@@ -30,11 +30,29 @@ st.sidebar.markdown("---")
 st.sidebar.write("🎓 **Proyecto:** Humanidades Digitales")
 st.sidebar.write("📅 **Fecha:** Mayo 2026")
 
-st.markdown("""
-**Snapshot: Julio 2025**  
-*Este dashboard presenta un análisis profundo sobre las tendencias de consumo, géneros emergentes y cumplimiento ético 
-en la plataforma Spotify, procesando millones de registros mediante estructuras de datos de alta eficiencia.*
-""")
+# --- ENCABEZADO ESTRATÉGICO ---
+st.set_page_config(page_title="Spotify Strategic Analytics", layout="wide")
+
+st.title("🎧 Spotify Market Intelligence Dashboard")
+st.markdown(f"**Strategic Insight Engine | v2.0**")
+
+# Usamos columnas para que el "Snapshot" no ocupe tanto espacio hacia abajo
+col_header1, col_header2 = st.columns([2, 1])
+
+with col_header1:
+    st.write("""
+    ### Transformando Datos en Decisiones Musicales
+    Este ecosistema analítico procesa millones de registros para identificar los **patrones de éxito** que definen la industria actual. 
+    A través de minería de datos avanzada, exploramos la intersección entre la creatividad artística y la viabilidad comercial.
+    """)
+
+with col_header2:
+    st.success(f"""
+    **Estatus del Sistema:**
+    * 📅 **Corte:** Mayo 2026
+    * 📊 **Volumen:** Millones de Datapoints
+    * ⚡ **Arquitectura:** Parquet Optimized
+    """)
 
 st.divider()
 
