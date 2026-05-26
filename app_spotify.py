@@ -4,28 +4,31 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
 
-# Ignorar avisos de versiones en la terminal
+# 1. SILENCIAR ADVERTENCIAS DE VERSIONES (Terminal Limpia)
 warnings.filterwarnings("ignore")
 
-# 1. Configuración de la página
+# 2. CONFIGURACIÓN DE PÁGINA
 st.set_page_config(page_title="Spotify Strategic Analytics 2025", layout="wide")
 
-# 2. Carga de datos con "Cache"
+# 3. CARGA DE DATOS OPTIMIZADA
 @st.cache_data
 def load_data():
+    # Asegúrate de que el archivo 'spotify_light.parquet' esté en la misma carpeta
     df = pd.read_parquet("spotify_light.parquet")
     return df
 
 try:
     df = load_data()
 except Exception as e:
-    st.error(f"Error al cargar la base de datos: {e}")
+    st.error(f"Error crítico al cargar la base de datos: {e}")
     st.stop()
 
-# --- ESTILOS PERSONALIZADOS (MODO BLANCO Y BUSCADOR) ---
+# 4. ESTILOS CSS PERSONALIZADOS (Blanco puro y Buscador de Impacto)
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; }
+    .main { background-color: #0e1117; color: white; }
+    
+    /* Métricas con borde verde y texto blanco */
     [data-testid="stMetric"] {
         background-color: #1e2129;
         padding: 20px;
@@ -34,8 +37,8 @@ st.markdown("""
     }
     [data-testid="stMetricValue"] { color: #FFFFFF !important; font-weight: bold; }
     [data-testid="stMetricLabel"] { color: #FFFFFF !important; opacity: 1; }
-    
-    /* Buscador verde */
+
+    /* Buscador con estilo Spotify */
     div[data-testid="stTextInput"] > div > div > input {
         background-color: #262730;
         color: #1DB954; 
@@ -51,19 +54,19 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- SIDEBAR ---
+# 5. BARRA LATERAL (Sidebar)
 st.sidebar.image("https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Green.png", width=200)
 st.sidebar.markdown("---")
 st.sidebar.info("""
-**Analistas Senior (Maestría):**
-* 👤 **Carlos Hidalgo**
-* 👤 **Salvador Garcia**
-* 👤 **Sergio Bárcena**
+**Equipo:**
+* **Carlos Hidalgo**
+* **Salvador Garcia**
+* **Sergio Bárcena**
 """)
 st.sidebar.write("**Proyecto:** Humanidades Digitales")
 st.sidebar.write("**Fecha:** Mayo 2026")
 
-# --- BLOQUE 1: INTRODUCCIÓN Y CONTEXTO ---
+# --- SECCIÓN 1: INTRODUCCIÓN ---
 st.title("Market Intelligence: El Ecosistema Spotify 2025")
 
 st.markdown(f"""
@@ -83,31 +86,34 @@ with col_intro1:
     que definen la industria musical contemporánea.
     """)
 with col_intro2:
-    st.success(f"**Estatus:** Corte Temporal Julio 2025 | Muestra Optimizada")
+    st.success(f"""
+    **Estatus del Ecosistema:**
+    * **Muestra:** Optimizada para Análisis Estratégico
+    * **Arquitectura:** Parquet High-Performance
+    * **Contexto:** Julio 2025
+    """)
 
 st.divider()
 
-# --- MÉTRICAS ---
+# --- SECCIÓN 2: INDICADORES CLAVE ---
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Pistas Analizadas", f"{len(df):,}")
 with col2:
-    pop_avg = df['track_popularity'].mean()
-    st.metric("Popularidad Promedio", f"{pop_avg:.2f} pts")
+    st.metric("Popularidad Promedio", f"{df['track_popularity'].mean():.2f} pts")
 with col3:
-    explicitas = (df['explicit'].mean() * 100)
-    st.metric("% Contenido Explícito", f"{explicitas:.2f}%")
+    st.metric("% Contenido Explícito", f"{(df['explicit'].mean() * 100):.2f}%")
 
 st.divider()
 
-# --- GRÁFICA 1: GÉNEROS CON TEXTO ---
+# --- SECCIÓN 3: GÉNEROS DOMINANTES ---
 st.header("Análisis de Géneros Dominantes")
 top_generos_data = df.groupby('artist_genres')['track_popularity'].mean().sort_values(ascending=False).head(10)
 top_generos_data.index = [g[:30] + '...' if len(str(g)) > 30 else g for g in top_generos_data.index]
 
 fig1, ax1 = plt.subplots(figsize=(12, 6))
 sns.barplot(x=top_generos_data.values, y=top_generos_data.index, color="#1DB954", ax=ax1)
-ax1.set_title("Top 10 Géneros por Impacto Acumulado", color='white', fontsize=16)
+ax1.set_title("Top 10 Géneros por Impacto Acumulado (Promedio)", fontsize=16, fontweight='bold', color='white')
 ax1.tick_params(colors='white')
 fig1.patch.set_facecolor('#0e1117')
 ax1.set_facecolor('#0e1117')
@@ -117,14 +123,12 @@ st.markdown("### Dominio del Mercado")
 st.write("""
 El gráfico revela un liderazgo claro de los géneros urbanos y regionales. Es notable cómo el **West Coast Hip Hop** mantiene la hegemonía comercial, seguido de cerca por movimientos culturales como el **Afropop** y el **Urbano Latino**.
 
-**Interpretación Estratégica:** La inversión en mercados emergentes está rindiendo frutos, con popularidades 
-promedio que superan los **70 puntos**. Esto demuestra que Spotify "abre la puerta" a ritmos globales que 
-cumplen con estándares de producción optimizados para el streaming.
+**Interpretación Estratégica:** La inversión en mercados emergentes está rindiendo frutos. Esto demuestra que Spotify "abre la puerta" a ritmos globales que cumplen con estándares de producción optimizados para el streaming.
 """)
 
 st.divider()
 
-# --- GRÁFICA 2: ÉTICA Y CUMPLIMIENTO CON TEXTO ---
+# --- SECCIÓN 4: ÉTICA Y CUMPLIMIENTO ---
 st.header("Gobernanza de Contenido: ¿Filtro o Bloqueo?")
 col_eth1, col_eth2 = st.columns([1, 2])
 
@@ -132,8 +136,7 @@ with col_eth1:
     st.subheader("Ética y Cumplimiento")
     st.write("""
     Spotify utiliza la etiqueta de **Contenido Explícito** como uno de sus principales mecanismos de control. 
-    Este filtro puede actuar como una barrera de entrada para ciertas playlists comerciales o 
-    familiares, limitando la "luz verde" para artistas con líricas transgresoras.
+    Este filtro puede actuar como una barrera de entrada para ciertas playlists comerciales, limitando la "luz verde" para artistas con líricas transgresoras.
     
     Sin embargo, nuestro análisis de **Compliance** revela que la rentabilidad es paritaria: 
     el contenido "Clean" es tan capaz de generar tracción masiva como el "Explicit".
@@ -151,16 +154,24 @@ with col_eth2:
 
 st.divider()
 
-# --- GRÁFICA 3: HEATMAP CON TEXTO ---
+# --- SECCIÓN 5: ADN DEL ÉXITO (HEATMAP) ---
 st.header("El ADN del Éxito Musical")
-col_graf1, col_txt1 = st.columns([2.5, 1])
 
+with st.expander("Diccionario de Atributos (Glosario)"):
+    st.write("""
+    * **Danceability:** Estabilidad del ritmo y fuerza del pulso.
+    * **Energy:** Intensidad y actividad perceptiva.
+    * **Valence:** Positividad (Alta = Alegre / Baja = Triste).
+    * **Popularity:** Éxito basado en reproducciones recientes.
+    """)
+
+col_graf1, col_txt1 = st.columns([2.5, 1])
 with col_graf1:
     cols_analisis = ['track_popularity', 'danceability', 'energy', 'valence', 'tempo']
     corr = df[cols_analisis].corr()
     fig4, ax4 = plt.subplots(figsize=(10, 6))
     sns.heatmap(corr, annot=True, cmap='RdYlGn', center=0, ax=ax4)
-    fig4.patch.set_alpha(0) 
+    fig4.patch.set_alpha(0) # Elimina recuadro negro
     ax4.set_facecolor("none")
     plt.xticks(rotation=45, color='white')
     plt.yticks(color='white')
@@ -170,19 +181,21 @@ with col_txt1:
     st.subheader("¿Qué hace a un Hit?")
     st.write("""
     **Interpretación Estratégica:**
-    * Una correlación alta entre **Energy** y **Popularity** sugiere que el mercado demanda ritmos intensos.
-    * Si el **Valence** (felicidad) es bajo pero la popularidad alta, estamos ante una tendencia de música melancólica.
-    * Spotify mide la "bailabilidad"; si una canción no induce al movimiento, el sistema de recomendación podría estar limitando su alcance.
+    * **La Dictadura del Ritmo:** La alta correlación entre **Energy** y **Popularity** sugiere que el algoritmo favorece ritmos intensos.
+    * **Bailabilidad:** Si la música no induce al movimiento, el sistema de recomendación podría estar limitando el alcance orgánico.
+    * **Neutralidad del Sentimiento:** El éxito no depende de si la canción es alegre o triste (*Valence*), sino de su energía.
     """)
 
 st.divider()
 
-# --- BLOQUE 4: BUSCADOR DESTACADO ---
-st.header("🔍 Auditoría de Mercado e Inteligencia")
-st.markdown("### Explora tu propio Segmento de Mercado")
-st.write("Utiliza esta herramienta para profundizar en artistas específicos y validar cómo el algoritmo los posiciona.")
+# --- SECCIÓN 6: AUDITORÍA (BUSCADOR DESTACADO) ---
+st.header("Auditoría de Mercado e Inteligencia")
+st.write("""
+**Análisis de Interacción:** Utiliza esta herramienta para profundizar en artistas específicos y validar cómo el algoritmo los posiciona. 
+Aquí es donde comprobamos si la plataforma **da entrada o bloquea** a un exponente específico basándose en su data.
+""")
 
-busqueda = st.text_input("Ingresa el nombre de un artista o canción:", placeholder="Ej. Peso Pluma, Bad Bunny...")
+busqueda = st.text_input("Ingresa el nombre de un artista o canción para auditar su desempeño:", placeholder="Ej. Peso Pluma, Bad Bunny, Queen...")
 
 if busqueda:
     resultados = df[df['artist_name'].str.contains(busqueda, case=False, na=False) | 
@@ -191,31 +204,56 @@ if busqueda:
         st.success(f"Se detectaron {len(resultados)} registros:")
         st.dataframe(resultados[['artist_name', 'track_name', 'track_popularity', 'artist_genres']], width=None)
     else:
-        st.error(f"El artista o canción '{busqueda}' no se encuentra en la muestra de julio 2025.")
+        st.error(f"El artista o canción '{busqueda}' no figura en la muestra auditada.")
 
 st.divider()
 
-# --- GRÁFICA 4: LÍDERES CON TEXTO ---
+# --- SECCIÓN 7: LÍDERES DE AUDIENCIA ---
 st.header("Oligopolio Creativo: Líderes de Audiencia")
 c_art1, c_art2 = st.columns([1, 2])
 
 with c_art1:
     st.write("""
-    **Concentración de Éxito:** En la industria musical de 2025, el éxito no es democrático.
-    Existe un efecto donde los pocos artistas con mayor inversión y visibilidad concentran la audiencia.
+    **Concentración de Éxito:** En la industria de 2025, el éxito no es democrático. 
+    Existe un efecto donde los 15 artistas principales absorben la mayoría de la tracción. 
+    
+    Esto confirma un mercado de **Oligopolio Creativo**, donde la entrada de nuevos talentos está estrictamente filtrada por los patrones que el algoritmo premia.
     """)
 
 with c_art2:
-    top_artistas = (
-        df.groupby('artist_name')['track_popularity']
-          .mean()
-          .sort_values(ascending=False)
-          .head(10)
-    )
-    fig5, ax5 = plt.subplots(figsize=(10, 5))
-    sns.barplot(x=top_artistas.values, y=top_artistas.index, color="#1DB954", ax=ax5)
-    ax5.set_title("Top 10 Artistas por Popularidad Promedio", color='white', fontsize=16)
-    ax5.tick_params(colors='white')
-    fig5.patch.set_facecolor('#0e1117')
-    ax5.set_facecolor('#0e1117')
-    st.pyplot(fig5)
+    # Usamos PROMEDIO para ver quién tiene el nivel de éxito más alto por canción
+    top_artistas = df.groupby('artist_name')['track_popularity'].mean().sort_values(ascending=False).head(15)
+    fig6, ax6 = plt.subplots(figsize=(10, 6))
+    sns.barplot(x=top_artistas.values, y=top_artistas.index, hue=top_artistas.index, palette="flare", legend=False, ax=ax6)
+    ax6.set_title("Top 15 Artistas por Popularidad Promedio", color='white')
+    ax6.tick_params(colors='white')
+    fig6.patch.set_facecolor('#0e1117')
+    ax6.set_facecolor('#0e1117')
+    # Etiquetas de valor en las barras
+    for i, v in enumerate(top_artistas.values):
+        ax6.text(v + 1, i, f'{v:.1f}', color='white', va='center', fontweight='bold')
+    st.pyplot(fig6)
+
+st.divider()
+
+# --- SECCIÓN 8: CONCLUSIONES ---
+st.header("Conclusiones y Recomendaciones Estratégicas")
+c_final1, c_final2 = st.columns(2)
+
+with c_final1:
+    st.info("### Hallazgos de Gobernanza")
+    st.markdown("""
+    1. **Estandarización:** Spotify premia la *Energy* y *Danceability*, creando un molde técnico para el éxito.
+    2. **Filtros Éticos:** La paridad entre contenido 'Clean' y 'Explicit' muestra una segmentación por nichos, no moral.
+    3. **Hegemonía 2025:** El Urbano Latino y el Regional dominan la fotografía actual del consumo global.
+    """)
+
+with c_final2:
+    st.success("### Recomendación Consultiva")
+    st.markdown("""
+    * **Para Sellos:** Priorizar el cumplimiento del "ADN del Hit" (Alta Energía) para asegurar la entrada a playlists.
+    * **Para el Análisis:** Monitorear cómo el algoritmo "bloquea" géneros que se alejan de estos patrones rítmicos.
+    """)
+
+st.markdown("---")
+st.caption("Dashboard Estratégico | Humanidades Digitales 2026")
